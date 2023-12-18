@@ -18,6 +18,7 @@ const vm = new Vue({ // Again, vm is our Vue instance's name for consistency.
         windowWidth: window.innerWidth,
         // UI elements
         printLable: "Print",
+        pauseLable: "Pause",
         synced_to_bot: false,
         sentiment: 0,
         lenght: 0,
@@ -25,7 +26,7 @@ const vm = new Vue({ // Again, vm is our Vue instance's name for consistency.
         layer: 0,
         connected: false,
         port: '/dev/tty.usbmodem2101',
-        baud: '250000',
+        baud: '115200',
         log_text: "some random text and even more",
         value: 1,
         slicer_options: {
@@ -187,13 +188,18 @@ const vm = new Vue({ // Again, vm is our Vue instance's name for consistency.
             }
             socket.emit('start_print', print_points, 0);
             if (this.printLable == "Print") {
-                this.printLable = "Stop"
+                this.printLable = "Home / Park"
             } else {
                 this.printLable = "Print"
             }
         },
         pause: function(event) {
             socket.emit('printer_pause_resume');
+            if (this.pauseLable == "Pause") {
+                this.pauseLable = "Resume"
+            } else {
+                this.pauseLable = "Pause"
+            }
         },
         // functionality for the drawing thingy
         draw(e) {

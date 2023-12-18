@@ -18,17 +18,17 @@ import point_calc as pc
 class Slicerhandler:
     def __init__(self):
         # makerbot
+        # self.params = {
+        #    "extrusion_rate": 0.1,
+        #    "feed_rate": 850,
+        #    "layer_hight": 0.5
+        #}
+        # delta
         self.params = {
-            "extrusion_rate": 0.1,
-            "feed_rate": 850,
+            "extrusion_rate": 0.8,
+            "feed_rate": 1500,
             "layer_hight": 0.5
         }
-        # delta
-        # self.params = {
-        #     "extrusion_rate": 0.8,
-        #     "feed_rate": 1500,
-        #     "layer_hight": 0.5
-        # }
 
     def create(self, height, points):
         # creates g-code from a list of points and the actuall hight of the print-layer
