@@ -91,7 +91,7 @@ if __name__ == "__main__":
 
     # printer credentials
     port = '/dev/tty.usbmodem14101'
-    baud = 250000
+    baud = 115200
 
     # setup
     print_handler = DefaultUSBHandler(port, baud)
