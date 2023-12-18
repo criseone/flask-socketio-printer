@@ -43,8 +43,8 @@ const vm = new Vue({ // Again, vm is our Vue instance's name for consistency.
             scale: 1
         },
         toolpath_type: "NONE",
-        plate_center_x: 100,
-        plate_center_y: 100
+        plate_center_x: 0,
+        plate_center_y: 0
     },
     watch: {
         // whenever question changes, this function will run
