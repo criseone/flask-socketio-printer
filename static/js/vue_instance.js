@@ -1,3 +1,5 @@
+var socket = io();
+
 const vm = new Vue({ // Again, vm is our Vue instance's name for consistency.
     el: '#vm',
     delimiters: ['[[', ']]'],
@@ -116,7 +118,7 @@ const vm = new Vue({ // Again, vm is our Vue instance's name for consistency.
                 //     console.error(err);
                 // });
 
-                fetch("http://localhost:8888/sentiment", {
+                /* fetch("http://localhost:8888/sentiment", {
                     "method": "GET",
                     "headers": {}
                 })
@@ -145,7 +147,7 @@ const vm = new Vue({ // Again, vm is our Vue instance's name for consistency.
                 })
                 .catch(err => {
                     console.error(err);
-                });
+                }); */
             }, 3 * 1000)
         },
         unpoll () {
@@ -268,7 +270,7 @@ const vm = new Vue({ // Again, vm is our Vue instance's name for consistency.
         //     console.error(err);
         // });
 
-        fetch("http://localhost:8888/sentiment", {
+        /* fetch("http://localhost:8888/sentiment", {
                     "method": "GET",
                     "headers": {}
         })
@@ -285,7 +287,7 @@ const vm = new Vue({ // Again, vm is our Vue instance's name for consistency.
         })
         .catch(err => {
             console.error(err);
-        });
+        }); */
     },
     mounted() {
         var svg = document.getElementById("svg");
