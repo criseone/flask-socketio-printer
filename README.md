@@ -43,7 +43,7 @@ All the modules are in the requirements.txt file
 
 `python3 -m pip install -r requirements.txt`
 
-If successful you can now run the app.
+*If successful you can now run the app.*
 
 ### Flask
 `python3 -m pip install 'flask==2.0.0'`
@@ -76,5 +76,5 @@ If successful you can now run the app.
 
 # Run
 
-Enter `python app.py` in the command line while in the appropriate project folder or, open the app.py file with VS Code and go to **Run** > **Run Without Debugging**.
+Enter `python3 app.py` in the command line while in the appropriate project folder or, open the app.py file with VS Code and go to **Run** > **Run Without Debugging**.
 
