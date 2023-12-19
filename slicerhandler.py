@@ -27,8 +27,12 @@ class Slicerhandler:
         self.params = {
             "extrusion_rate": 0.8,
             "feed_rate": 1500,
-            "layer_hight": 0.5
+            "layer_hight": 0.5,
+            "layer_hight_percent": 125
         }
+
+        # Calculate layer_hight in percent
+        self.params['layer_hight_percent'] = self.params['layer_hight'] * 250
 
     def create(self, height, points):
         # creates g-code from a list of points and the actuall hight of the print-layer

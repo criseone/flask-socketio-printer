@@ -48,7 +48,8 @@ def hello():
     emit('slicer_options', {
         'extrusion_rate': slicer_handler.params['extrusion_rate'],
         'feed_rate': slicer_handler.params['feed_rate'],
-        'layer_hight': slicer_handler.params['layer_hight']
+        'layer_hight': slicer_handler.params['layer_hight'],
+        'layer_hight_percent': slicer_handler.params['layer_hight_percent']
     })
     emit('toolpath_type', { 'toolpath_type': tooplpath_type })
     emit('toolpath_options', {
@@ -65,6 +66,7 @@ def slicer_options(data):
     slicer_handler.params['extrusion_rate'] = data["extrusion_rate"]
     slicer_handler.params['feed_rate'] = data["feed_rate"]
     slicer_handler.params['layer_hight'] = data["layer_hight"]
+    slicer_handler.params['layer_hight_percent'] = data["layer_hight_percent"]
 
 @socketio.on('toolpath_options')
 def toolpath_options(data):
@@ -105,7 +107,13 @@ def layer_to_zero():
 #reset printer postition and settings
 @socketio.on('printer_setup')
 def printer_setup():
-    print_handler.send(["G90", "M104 S210", "G28", "G91", "G1 Z10", "G90"])
+    print_handler.send(slicer_handler.end())
+    #print_handler.send(["G90", "M104 S210", "G28", "G91", "G1 Z10", "G90"])
+    global layer
+    global height
+    layer = 0
+    height = 0
+    emit('layer', {'layer': layer}) 
     #print_handler.send(["G90", "G28"])
     while print_handler.is_printing():
         time.sleep(0.1)
@@ -171,6 +179,9 @@ def start_print(data, wobble):
     while printing:
         #gcode = slicerhandler.create(i, shapehandler.create_test(0.5 * i))
 
+        if(height > 150):
+            printing = False
+            
         wobbler = wobble
         angle = angle + random.randint(-wobbler, wobbler)
         # print("angle = " + str(angle))
@@ -187,16 +198,13 @@ def start_print(data, wobble):
             print_handler.send(gcode)
             while (print_handler.is_printing() or print_handler.is_paused()):
                 time.sleep(0.1)
-                #print(print_handler.status())
+                print(print_handler.status())
             # update layer hight
             layer = layer + 1
             height = height + slicer_handler.params['layer_hight']
             print("height = " + str(height))
-            emit('layer', {'layer': height})
+            emit('layer', {'layer': layer}) #"We are on Layer" – Output
 
-        if(height > 150):
-            printing = False
-        
     print_handler.send(slicer_handler.end())
 
 if __name__ == '__main__':
