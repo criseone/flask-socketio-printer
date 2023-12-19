@@ -10,7 +10,7 @@ Run `python` in the command line to check for a Python install.
 - If Python is not installed, Windows Store will open and offer an opportunity to install Python directly.
 - If Python is installed it will launch and return the version; enter `quit()` to exit and proceed with the PIP install commands as listed below.
 
-## **Create and Use Virtual Environments in Python**
+## **Create and Use Virtual Environments in Python (Mac OS Guide)**
 ### **Create a new virtual environment**
 To create a virtual environment, go to your project’s directory and run the
 following command. This will create a new virtual environment in a local folder
