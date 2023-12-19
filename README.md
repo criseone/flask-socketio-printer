@@ -37,6 +37,11 @@ If you want to switch projects or leave your virtual environment,
 `deactivate`
 
 ## Python Modules
+
+### Install all at once
+All the modules are in the requirements.txt file
+python -m pip install -r requirements.txt
+
 ### Flask
 `python3 -m pip install 'flask==2.0.0'`
 - **Note**: If you installed the newest Version of Flask you will have to uninstall it and reinstall with the correct version + uninstall the module Werkzeug and reinstall Werkzeug 2.2.0.
