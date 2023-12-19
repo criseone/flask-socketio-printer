@@ -32,8 +32,7 @@ const vm = new Vue({ // Again, vm is our Vue instance's name for consistency.
         slicer_options: {
             extrusion_rate: 0,
             feed_rate: 0,
-            layer_hight: 0.5,
-            layer_hight_percent: 125
+            layer_hight: 0.5
         },
         toolpath_options: {
             transformation_factor: 0,
@@ -92,16 +91,6 @@ const vm = new Vue({ // Again, vm is our Vue instance's name for consistency.
         svgFactor: function () {
             return 150 / this.windowWidth;
         },
-        layer_hight:{
-            get() {
-                return this.slicer_options.layer_hight_percent / 250;
-            },
-            set(value) {
-                // Convert back to percentage for UI
-                this.slicer_options.layer_hight_percent = value * 250;
-                console.error(value);
-            },
-        }
         // printLable: function() {
         //     if (this.isPrinting) {
         //         return "Stop"
