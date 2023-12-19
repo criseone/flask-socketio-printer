@@ -40,7 +40,7 @@ If you want to switch projects or leave your virtual environment,
 
 ### Install all at once
 All the modules are in the requirements.txt file
-`python -m pip install -r requirements.txt`
+`python3 -m pip install -r requirements.txt`
 
 ### Flask
 `python3 -m pip install 'flask==2.0.0'`
