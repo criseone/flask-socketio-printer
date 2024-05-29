@@ -74,7 +74,7 @@ All the modules are in the requirements.txt file
 ### Numpy
 `python3 -m pip install numpy`
 
-### Numpy
+### Matplotlib
 `python3 -m pip install matplotlib `
 
 # Run
