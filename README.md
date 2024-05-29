@@ -37,6 +37,14 @@ If you want to switch projects or leave your virtual environment,
 `deactivate`
 
 ## Python Modules
+
+### Install all at once
+All the modules are in the requirements.txt file
+
+`python3 -m pip install -r requirements.txt`
+
+*If successful you can now run the app.*
+
 ### Flask
 `python3 -m pip install 'flask==2.0.0'`
 - **Note**: If you installed the newest Version of Flask you will have to uninstall it and reinstall with the correct version + uninstall the module Werkzeug and reinstall Werkzeug 2.2.0.
@@ -68,5 +76,5 @@ If you want to switch projects or leave your virtual environment,
 
 # Run
 
-Enter `python app.py` in the command line while in the appropriate project folder or, open the app.py file with VS Code and go to **Run** > **Run Without Debugging**.
+Enter `python3 app.py` in the command line while in the appropriate project folder and with the virtual environment activated or, open the app.py file with VS Code and go to **Run** > **Run Without Debugging**.
 
