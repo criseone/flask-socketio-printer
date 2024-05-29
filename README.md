@@ -74,6 +74,9 @@ All the modules are in the requirements.txt file
 ### Numpy
 `python3 -m pip install numpy`
 
+### Numpy
+`python3 -m pip install matplotlib `
+
 # Run
 
 Enter `python3 app.py` in the command line while in the appropriate project folder and with the virtual environment activated or, open the app.py file with VS Code and go to **Run** > **Run Without Debugging**.
