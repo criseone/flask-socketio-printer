@@ -1,19 +1,25 @@
+h2{
+    margin-bottom: 1rem;
+}
+
 #vm {
-    display: grid;
     width: 100vw;
-    height: 100vh;
-    grid-template-rows: 50px 1fr;
 }
 
 #header {
     overflow: auto;
-    height: 50px;
     position: fixed;
+    background: white;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: space-between;
+    align-content: space-between;
+    padding: 10px;
 }
 
 #header h1 {
     float: left;
-    margin: 10px;
     font-size: 25px;
     font-style: italic;
     font-weight: 900;
@@ -22,26 +28,27 @@
 #header .icon {
     /* float: right; */
     cursor: pointer;
-
     animation-name: wave-animation;  /* Refers to the name of your @keyframes element below */
     animation-duration: 2.5s;        /* Change to speed up or slow down */
     animation-iteration-count: infinite;  /* Never stop waving :) */
     transform-origin: 50% 50%;       /* Pivot around the bottom-left palm */
+    width: 100%;
 }
 
 @keyframes wave-animation {
     0% { transform: rotate( 0.0deg) }
-    10% { transform: rotate(14.0deg) }  /* The following five values can be played with to make the waving more or less extreme */
-    20% { transform: rotate(-8.0deg) }
-    30% { transform: rotate(14.0deg) }
-    40% { transform: rotate(-4.0deg) }
-    50% { transform: rotate(10.0deg) }
+    10% { transform: rotate(1.0deg) }  /* The following five values can be played with to make the waving more or less extreme */
+    20% { transform: rotate(-2.0deg) }
+    30% { transform: rotate(1.0deg) }
+    40% { transform: rotate(-2.0deg) }
+    50% { transform: rotate(2.0deg) }
     60% { transform: rotate( 0.0deg) }  /* Reset for the last half to pause */
     100% { transform: rotate( 0.0deg) }
 }
 
 input {
     width: 100%;
+    font-size: 16px;
 }
 
 input[type=checkbox], input[type=radio] {
@@ -50,8 +57,7 @@ input[type=checkbox], input[type=radio] {
 
 .text-input {
     float: left;
-    margin: 10px;
-    font-size: 25px;
+    font-size: 16px;
     font-style: italic;
     font-weight: 900;
     /* overflow: visible; */
@@ -59,67 +65,34 @@ input[type=checkbox], input[type=radio] {
     width: auto;
 }
 
-#event {
-    /* cursor: pointer; */
-}
-
 #motion {
-    /* width: 150px; */
-    /* height:150px; */
+    width: 100%;
     font-size: 50px;
     line-height: 50px;
     cursor: pointer;
-    position: relative;
-    margin: auto;
     margin-bottom: 10px;
-    display: box;
-    display: -webkit-box;
-    display: -moz-box;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 #motion div {
-    text-align: center;
-    -webkit-box-flex: 1;
-    box-flex: 1;
+    padding: 0 10px;
 }
 
 p {
-    margin: unset;
+    margin: 0.75rem 0 0.5rem 0;
 }
 
-.grid-container {
-    /* clear: both;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 100%; */
-    width: calc(100% - 200px);
-    padding-top: 50px;
-}
 #control {
-    padding: 0px;
-    /* background-color: #7b00d9; */
-    /* grid-column: 1 / span 1;
-    grid-row: 1 / span 1;
-    border-top-left-radius: 20px; */
+    padding-bottom: 20px;
 }
 
 #sidebar {
     background-color: #68f503;
-    padding: 10px;
-    width: calc(100vw - (100vh - 30px));
-    display: block;
-    /* overflow: hidden; */
-    position: fixed;
-    top: 50px;
-    right: 10px;
-    /* background-color: #7b00d9; */
-    /* color: white; */
-    height: calc(100vh - 60px);
-    /* scroll-behavior: auto; */
-    overflow-y: scroll;
+    padding: 160px 10px 10px 10px;
+    width: 100%;
 
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
 }
 
 #sidebar::-webkit-scrollbar {
@@ -127,53 +100,40 @@ p {
 }
 
 #options {
-    padding-top: 20px;
+    padding: 20px 0;
+    border-top: 4px solid black;
+}
+
+#buttons{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    justify-content: space-evenly;
+    margin-bottom: 1rem;
 }
 
 button {
     background-color: black;
     border: none;
     color: white;
-    padding: 5px 15px;
+    padding: 5px 25px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
 }
 
-#shape-editor {
-    height: calc(100vh - 50px);
-    padding: 10px;
-    padding-top: 0px;
+.toolpath{
+    display: none;
 }
 
-#shape-functions {
-    position: absolute;
-    padding: 10px;
+.vue-range-slider.slider-component{
+    padding: 0 !important;
 }
 
-#svg {
-    height: 100%;
-    aspect-ratio: 1;
-    overflow: hidden;
-    display: block;
-    border: solid 5px #68f503;
-}
-
-#triangle {
-    stroke: #000;
-    stroke-width: 3;
-    fill: none;
-}
-
-.circle {
-    fill-opacity: 0.5;
-    stroke-width: 2;
-    fill: black;
-    stroke: black;
-}
-
-.circle:last-child {
-    fill: #68f503;
-    stroke: #68f503;
+.shape{
+    margin-top: 1rem;
+    padding-top: 0.5rem;
+    border-top: 1px dotted black;
 }

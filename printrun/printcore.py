@@ -540,6 +540,12 @@ class printcore():
 
         self.print_thread = None
 
+        # Save additional state information
+        self.saved_state = {
+            'relative': self.relative,
+            'relative_e': self.relative_e,
+        }
+
         # saves the status
         self.pauseX = self.analyzer.abs_x
         self.pauseY = self.analyzer.abs_y
@@ -552,8 +558,8 @@ class printcore():
     def resume(self):
         """Resumes a paused print."""
         if not self.paused: return False
-        # restores the status
-        self.send_now("G90")  # go to absolute coordinates
+
+        self.send_now("G90")
 
         xyFeed = '' if self.xy_feedrate is None else ' F' + str(self.xy_feedrate)
         zFeed = '' if self.z_feedrate is None else ' F' + str(self.z_feedrate)

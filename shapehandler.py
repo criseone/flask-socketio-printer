@@ -8,25 +8,32 @@ import time
 import getopt
 import sys
 import getopt
+import random
 
 import math
 
 # import custom classes
 import point_calc as pc
+import matplotlib.pyplot as plt
 import numpy as np
 
 class Shapehandler:
     def __init__(self):
         self.params_toolpath = {
             "transformation_factor": 0.3,
+            "growth_factor": 0.3,
             "magnitude": 0,
             "mag_goal": 0,
             "wave_lenght": 8,
             "rasterisation": 15,
-            "diameter": 30,
-            "dia_goal": 30,
-            "scale": 1,
-            "scale_goal": 1
+            "diameter": 10,
+            "dia_goal": 10,
+            "circumnavigations": 8,
+            "circum_goal": 8,
+            "centerpoints": 3,
+            "center_goal": 3,
+            "shape": 100,
+            "shape_goal": 100
         }
 
     def update_transformations(self):
@@ -36,23 +43,33 @@ class Shapehandler:
         elif (self.params_toolpath["dia_goal"] < self.params_toolpath["diameter"]):
             self.params_toolpath["diameter"] = self.params_toolpath["diameter"] - self.params_toolpath["transformation_factor"]
 
-        if (self.params_toolpath["scale_goal"] > self.params_toolpath["scale"]):
-            self.params_toolpath["scale"] = self.params_toolpath["scale"] + self.params_toolpath["transformation_factor"]
-        elif (self.params_toolpath["scale_goal"] < self.params_toolpath["scale"]):
-            self.params_toolpath["scale"] = self.params_toolpath["scale"] - self.params_toolpath["transformation_factor"]
+        if (self.params_toolpath["circum_goal"] > self.params_toolpath["circumnavigations"]):
+            self.params_toolpath["circumnavigations"] = self.params_toolpath["circumnavigations"] + self.params_toolpath["transformation_factor"]
+        elif (self.params_toolpath["circum_goal"] < self.params_toolpath["circumnavigations"]):
+            self.params_toolpath["circumnavigations"] = self.params_toolpath["circumnavigations"] - self.params_toolpath["transformation_factor"]
+        
+        if (self.params_toolpath["center_goal"] > self.params_toolpath["centerpoints"]):
+            self.params_toolpath["centerpoints"] = self.params_toolpath["centerpoints"] + self.params_toolpath["transformation_factor"]
+        elif (self.params_toolpath["center_goal"] < self.params_toolpath["centerpoints"]):
+            self.params_toolpath["centerpoints"] = self.params_toolpath["centerpoints"] - self.params_toolpath["transformation_factor"]
+ 
+        if (self.params_toolpath["shape_goal"] > self.params_toolpath["shape"]):
+            self.params_toolpath["shape"] = self.params_toolpath["shape"] + self.params_toolpath["transformation_factor"]
+        elif (self.params_toolpath["shape_goal"] < self.params_toolpath["shape"]):
+            self.params_toolpath["shape"] = self.params_toolpath["shape"] - self.params_toolpath["transformation_factor"]
 
-        growth_factor = 0.1
+        #growth_factor = 0.5
         if (self.params_toolpath["mag_goal"] > self.params_toolpath["magnitude"]):
-            self.params_toolpath["magnitude"] = self.params_toolpath["magnitude"] + growth_factor
+            self.params_toolpath["magnitude"] = self.params_toolpath["magnitude"] + self.params_toolpath["growth_factor"]
         elif (self.params_toolpath["mag_goal"] < self.params_toolpath["magnitude"]):
-            self.params_toolpath["magnitude"] = self.params_toolpath["magnitude"] - growth_factor
+            self.params_toolpath["magnitude"] = self.params_toolpath["magnitude"] - self.params_toolpath["growth_factor"]
 
         return 0
     
     def apply_transformations(self, points):
         # apply transformations to the shape 
 
-        points = self.scale(points, self.params_toolpath["scale"])
+        points = self.scale(points, self.params_toolpath["circumnavigations"])
 
         return points
 
@@ -81,8 +98,35 @@ class Shapehandler:
             points.append(pc.point(round(x, 5), round(y, 5), round(z, 5)))
             i += 1
 
-        points.append(points[0])
         return points
+    
+    def generate_spiral(self, num_circumnavigations=10, number_of_points=100, radius=10, num_centerpoints=3):
+        spirals = []
+        # Define fixed center points for each spiral
+        center_points = [(0, 0), (20, 40), (0, -60), (20, -40), (-20, -40), (0, 60), (-20, 40)]
+
+        for i in range(num_centerpoints):
+            # Randomly adjust the center point within a -5 to +5 range
+            center_x_ind = center_points[i][0] + random.randint(-5, 5)
+            center_y_ind = center_points[i][1] + random.randint(-5, 5)
+            
+            points = []
+            theta = np.linspace(0, num_circumnavigations * 2 * np.pi, number_of_points)
+            r = np.linspace(0, radius, number_of_points)
+            x = center_x_ind + r * np.cos(theta)
+            y = center_y_ind + r * np.sin(theta)
+            z = 0  # z remains constant
+
+            for idx in range(len(x)):
+                x_rounded = np.around(x[idx], decimals=5)
+                y_rounded = np.around(y[idx], decimals=5)
+                z_rounded = np.around(z, decimals=5)
+                points.append(pc.point(x_rounded, y_rounded, z_rounded))
+            
+            spirals.append(points)
+        flattened_points = [point for spiral in spirals for point in spiral]
+        return flattened_points
+
 
     def create_stepover(self, angle = 0, stepover_parameter = 10):
         # stepover test shape
@@ -139,6 +183,7 @@ class Shapehandler:
             points[i] =  points[i] * factor
 
         return points
+
 
     def toolpath(self, points, shape = "NONE", angle = 0):
         # ths function creates a toolpath from an array of points and returns a new array

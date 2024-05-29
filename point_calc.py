@@ -12,7 +12,8 @@ def point(x = 0, y = 0, z = 0):
 	return np.array([x, y, z])
 
 def distance(a, b):
-    # calculate the discance between twho points
+    a = np.array(a)  # Convert tuple to numpy array
+    b = np.array(b)  # Convert tuple to numpy array
     return np.linalg.norm(a - b)
 
 def rotate(p, o=np.array([0, 0, 0]), degrees=0):

@@ -69,6 +69,10 @@ class Slicerhandler:
         gcode.append("G92 E0")
         gcode.append("G1 E-6")
 
+        # Write each GCode layer to the GCode File
+        with open("output_gcode_file.gcode", "a") as file:
+            file.write("\n".join(gcode))
+
         return gcode
 
     def start(self):
@@ -78,10 +82,14 @@ class Slicerhandler:
         gcode.append("G90")
         # the following 2 lines are the likely the brim extrustion commands to get the material flowing
         gcode.append("G1 X0 Y0 Z" + str(self.params['layer_hight']))
-        gcode.append("G1 X100 E25")
+        gcode.append("G1 X0 E25")
         gcode.append("G90")
         gcode.append("G92 E0")
-        gcode.append("G1 E-4")
+        # gcode.append("G1 E-4")
+
+        # We are starting a new GCode File for testing
+        with open("output_gcode_file.gcode", "w") as file:
+            file.write("\n".join(gcode))
 
         return gcode
 
@@ -96,6 +104,10 @@ class Slicerhandler:
         gcode.append("G90")
         # gcode.append("G28 X Y")
         gcode.append("G28")
+
+        # Write last GCode layer to the GCode File
+        with open("output_gcode_file.gcode", "a") as file:
+            file.write("\n".join(gcode))
 
         return gcode
 

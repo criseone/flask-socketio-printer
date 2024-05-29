@@ -33,6 +33,7 @@ layer = 0
 height = 0
 tooplpath_type = "NONE"
 printing = False
+toggle_state = False
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -57,7 +58,9 @@ def hello():
         'wave_lenght': shape_handler.params_toolpath['wave_lenght'],
         'rasterisation': shape_handler.params_toolpath['rasterisation'],
         'diameter': shape_handler.params_toolpath['diameter'],
-        'scale': shape_handler.params_toolpath['scale']
+        'circumnavigations': shape_handler.params_toolpath['circumnavigations'],
+        'centerpoints': shape_handler.params_toolpath['centerpoints'],
+        'shape': shape_handler.params_toolpath['shape']
     })
 
 @socketio.on('slicer_options')
@@ -71,7 +74,15 @@ def toolpath_options(data):
     shape_handler.params_toolpath['mag_goal'] = data["magnitude"]
     shape_handler.params_toolpath['wave_lenght'] = data["wave_lenght"]
     shape_handler.params_toolpath['rasterisation'] = data["rasterisation"]
+    global diameter
     shape_handler.params_toolpath['dia_goal'] = data["diameter"]
+    diameter = data["diameter"]
+    global circumnavigations
+    circumnavigations = data["circumnavigations"]
+    global centerpoints
+    centerpoints = data["centerpoints"]
+    global shape
+    shape = data["shape"]
     # print(shape_handler.params_toolpath, data)
 
 @socketio.on('layer')
@@ -129,10 +140,23 @@ def printer_down():
 
 @socketio.on('printer_pause_resume')
 def printer_pause_resume():
-    if print_handler.is_printing():
+    global toggle_state
+    global printing
+    if not toggle_state:  # If currently printing (even count of button clicks)
+        printing = False
+        toggle_state = True  # Set to paused state
         print_handler.pause()
-    elif print_handler.is_paused():
+        print("Printing paused.")
+    else:  # If currently paused (odd count of button clicks)
+        printing = True
+        toggle_state = False  # Set to printing state
         print_handler.resume()
+        print("Printing resumed.")
+
+    # if print_handler.is_printing():
+    #    print_handler.pause()
+    # elif print_handler.is_paused():
+    #    print_handler.resume()
 
 def printer_extrude():
     print_handler.send(["G92 E0", "G1 E2 F100"])
@@ -187,13 +211,15 @@ def start_print(data, wobble):
         # create the shape points
         # points = shape_handler.create_test(10)
         # points = shape_handler.create_stepover(angle, 3)
-        points = shape_handler.toolpath(original_points, tooplpath_type, angle)
+        # points = shape_handler.toolpath(original_points, tooplpath_type, angle)
+        points = shape_handler.generate_spiral(circumnavigations, shape, diameter, centerpoints)
 
         repetitions = 1
         for i in range(repetitions):
             # create gcode from points
             gcode = slicer_handler.create(height, points)
             print_handler.send(gcode)
+
             while (print_handler.is_printing() or print_handler.is_paused()):
                 time.sleep(0.1)
                 print(print_handler.status())
@@ -203,6 +229,9 @@ def start_print(data, wobble):
             # print("height = " + str(height))
             emit('layer', {'layer': layer}) #"We are on Layer" – Output
 
+            #time.sleep(3)  # Wait 3 seconds
+
+            
         print("height = " + str(height))
     print_handler.send(slicer_handler.end())
 
@@ -212,6 +241,6 @@ if __name__ == '__main__':
         app=app,
         socketio=socketio,
         server="flask_socketio",
-        width=940,
+        width=350,
         height=700
     ).run()

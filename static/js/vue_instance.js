@@ -39,12 +39,14 @@ const vm = new Vue({ // Again, vm is our Vue instance's name for consistency.
             magnitude: 0,
             wave_lenght: 0,
             rasterisation: 0,
-            diameter: 0,
-            scale: 1
+            diameter: 10,
+            circumnavigations: 1,
+            centerpoints: 3,
+            shape: 100
         },
         toolpath_type: "NONE",
-        plate_center_x: 0,
-        plate_center_y: 0
+        plate_center_x: 100,
+        plate_center_y: 100
     },
     watch: {
         // whenever question changes, this function will run

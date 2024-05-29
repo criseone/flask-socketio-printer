@@ -1,127 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>Flask Printer GUI</title>
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
-		<link rel="stylesheet" href="https://unpkg.com/vue-range-component@1.0.3/dist/vue-range-slider.min.css">
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-		<script src="https://unpkg.com/vue-range-component@1.0.3/dist/vue-range-slider.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
-	</head>
-	<body>
-		<div id="vm">
-			<div id="header">
-				<h1 @click="connect" class="icon" v-if="connected">&#128077</h1>
-				<h1 @click="connect" class="icon" v-else>&#128078</h1>
-				<h1 id="port">PORT:</h1>
-				<input class="text-input" v-model="port">
-				<h1 id="baud">BAUD:</h1>
-				<input class="text-input" v-model="baud">
-			</div>
-			<div class="grid-container">
-				<div id="sidebar">
-					<div id="control">
-						<h4>Printer Controller:</h4>
-						<div id="motion">
-							<div id="back" @click="move_up">&uarr;</div>
-							<div id="forth" @click="move_down">&darr;</div>
-							<!--<div id="left" @click="">&larr;</div>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Flask Printer GUI</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://unpkg.com/vue-range-component@1.0.3/dist/vue-range-slider.min.css">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://unpkg.com/vue-range-component@1.0.3/dist/vue-range-slider.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+		integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+		crossorigin="anonymous"></script>
+</head>
+
+<body>
+	<div id="vm">
+		<div id="header">
+			<h1 @click="connect" class="icon" v-if="connected">&#128077</h1>
+			<h1 @click="connect" class="icon" v-else>&#128078</h1>
+			<h1 id="port">PORT:</h1>
+			<input class="text-input" v-model="port">
+			<h1 id="baud">BAUD:</h1>
+			<input class="text-input" v-model="baud">
+		</div>
+		<div id="sidebar">
+			<div id="control">
+				<h2>Printer Controller</h2>
+				<div id="motion">
+					<div id="back" @click="move_up">&uarr;</div>
+					<div id="forth" @click="move_down">&darr;</div>
+					<!--<div id="left" @click="">&larr;</div>
 							<div id="right" @click="">&rarr;</div>-->
-						</div>
-						<button @click="setup">New</button>
-						<button @click="print">[[ printLable ]]</button>
-						<button @click="pause">[[ pauseLable ]]</button>
-						<div id="test">
-							<p>We are on Layer:</p>
-							<input v-model="layer" placeholder="" disabled>
-						</div>
-					</div>
-					<div id="options">
-						<div>
-							<h4>Options:</h4>
-							<label v-if="synced_to_bot == true" for="checkbox">syncronized to bot</label>
-							<label v-else for="checkbox">not syncronized to bot</label>
-							<input type="checkbox" class="checkbox" v-model="synced_to_bot">
-							<p>Center of the printer plate:</p>
-							<input v-model="plate_center_x">
-							<input style="margin-bottom:15px" v-model="plate_center_y">
-							<br>
-							<h5>Slicer:</h5>
-							<p>Extrusion Rate: [[ slicer_options.extrusion_rate ]]</p>
-							<!-- <input v-model="slicer_options.extrusion_rate" placeholder=""> -->
-							<vue-range-slider :tooltip="null" :min="+0" :max="+1" :step="+0.01" ref="slider" v-model="slicer_options.extrusion_rate"></vue-range-slider>
-							<p>Feed Rate: [[ slicer_options.feed_rate ]]</p>
-							<vue-range-slider :tooltip="null" :min="+0" :max="+2000" step="+1" ref="slider" v-model="slicer_options.feed_rate"></vue-range-slider>
-							<p>Layer Height: [[ slicer_options.layer_hight ]]</p>
-							<vue-range-slider :tooltip="null" :min="+0.2" :max="+0.8" step="+0.1" ref="slider" v-model="slicer_options.layer_hight"></vue-range-slider>
-							<h5>Shape</h5>
-							<p>Transformation Factor: [[ toolpath_options.transformation_factor ]]</p>
-							<vue-range-slider :tooltip="null" :min="0" :max="0.5" :step="0.01" ref="slider" v-model="toolpath_options.transformation_factor"></vue-range-slider>
-							<p>Scale: [[ toolpath_options.scale ]]</p>
-							<vue-range-slider :tooltip="null" :min="0.5" :max="2" :step="0.1" ref="slider" v-model="toolpath_options.scale"></vue-range-slider>
-							<p>Diameter: [[ toolpath_options.diameter ]]</p>
-							<vue-range-slider :tooltip="null" :min="10" :max="100" :step="1" ref="slider" v-model="toolpath_options.diameter"></vue-range-slider>
-							<h5>Toolpath</h5>
-							<select name="Toolpath Type" class="form-control" v-model="toolpath_type">
-								<option value="NONE">Nothing</option>
-								<option value="SINE">Sinus</option>
-								<option value="SQUARE">Square</option>
-								<option value="SAW">Saw</option>
-							</select>
-							<p>Magnitude: [[ toolpath_options.magnitude ]]</p>
-							<vue-range-slider :tooltip="null" :min="0" :max="10" :step="0.5" ref="slider" v-model="toolpath_options.magnitude"></vue-range-slider>
-							<p>Wave Lenght: [[ toolpath_options.wave_lenght ]]</p>
-							<vue-range-slider :tooltip="null" :min="+1" :max="+20" :step="+1" ref="slider" v-model="toolpath_options.wave_lenght"></vue-range-slider>
-							<p>Rasterisation: [[ toolpath_options.rasterisation ]]</p>
-							<vue-range-slider :tooltip="null" :min="1" :max="100" :step="1" ref="slider" v-model="toolpath_options.rasterisation"></vue-range-slider>
-						</div>
-					</div>
 				</div>
-				<div id="shape-editor">
-					<div id="shape-functions">
-						<button @click="emptyPoints">Reset</button>
-						<button @click="loadCircle">Circle</button>
-						<button @click="shapeCloseOpen">Open/Close</button>
-						<!-- <span>[[ points ]]</span> -->
+				<div id="buttons">
+					<button @click="setup">New</button>
+					<button @click="print">[[ printLable ]]</button>
+					<button @click="pause">[[ pauseLable ]]</button>
+				</div>
+				<div id="test">
+					<p>We are on Layer:</p>
+					<input v-model="layer" placeholder="" disabled>
+				</div>
+			</div>
+			<div id="options">
+				<div>
+					<div class="options">
+						<h2>Options</h2>
+						<label v-if="synced_to_bot == true" for="checkbox">syncronized to bot</label>
+						<label v-else for="checkbox">not syncronized to bot</label>
+						<input type="checkbox" class="checkbox" v-model="synced_to_bot">
+						<p>Center of the printer plate:</p>
+						<input v-model="plate_center_x">
+						<input style="margin: 0.5rem 0 1rem 0;" v-model="plate_center_y">
 					</div>
-					<svg 
-						@click.self="draw" 
-						@mouseup="endDrag" 
-						@mousemove="drag" 
-						id="svg" xmlns="http://www.w3.org/2000/svg"
-						viewBox="0 0 150 150"
-					>
-						<polyline 
-							v-if="shapeOpen"
-							id="triangle" 
-							v-bind:points="stringPoints" 
-							vector-effect="non-scaling-stroke" 
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						></polyline>
-						<polygon 
-							v-else id="triangle" 
-							v-bind:points="stringPoints" 
-							vector-effect="non-scaling-stroke" 
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						></polygon>
-						<circle
-							v-for="(point, index) in points"
-							:id="index" class="circle"
-							:r="svgFactor * 10"
-							:cx="point[0]" :cy="point[1]"
-							@mousedown="startDrag"
-							vector-effect="non-scaling-stroke"
-						></circle>
-					</svg>
+					<div class="slicer">
+						<h4>Slicer</h4>
+						<p>Extrusion Rate: [[ slicer_options.extrusion_rate ]]</p>
+						<!-- <input v-model="slicer_options.extrusion_rate" placeholder=""> -->
+						<vue-range-slider :tooltip="null" :min="+0" :max="+1" :step="+0.01" ref="slider"
+							v-model="slicer_options.extrusion_rate"></vue-range-slider>
+						<p>Feed Rate: [[ slicer_options.feed_rate ]]</p>
+						<vue-range-slider :tooltip="null" :min="+0" :max="+2000" step="+1" ref="slider"
+							v-model="slicer_options.feed_rate"></vue-range-slider>
+						<p>Layer Height: [[ slicer_options.layer_hight ]]</p>
+						<vue-range-slider :tooltip="null" :min="+0.5" :max="+1.8" step="+0.1" ref="slider"
+							v-model="slicer_options.layer_hight"></vue-range-slider>
+					</div>
+					<div class="shape">
+						<h4>Shape</h4>
+						<p>Transformation Factor: [[ toolpath_options.transformation_factor ]]</p>
+						<vue-range-slider :tooltip="null" :min="0" :max="1.5" :step="0.01" ref="slider"
+							v-model="toolpath_options.transformation_factor"></vue-range-slider>
+						<p>Circumnavigations: [[ parseInt(toolpath_options.circumnavigations) ]]</p>
+						<vue-range-slider :tooltip="null" :min="3" :max="10" :step="1" ref="slider"
+							v-model="toolpath_options.circumnavigations"></vue-range-slider>
+						<p>Diameter: [[ parseInt(toolpath_options.diameter) ]]</p>
+						<vue-range-slider :tooltip="null" :min="5" :max="25" :step="5" ref="slider"
+							v-model="toolpath_options.diameter"></vue-range-slider>
+						<p>Nr. of Center Points: [[ parseInt(toolpath_options.centerpoints) ]]</p>
+						<vue-range-slider :tooltip="null" :min="2" :max="7" :step="1" ref="slider"
+							v-model="toolpath_options.centerpoints"></vue-range-slider>
+						<p>Shape: [[ parseInt(toolpath_options.shape) ]]</p>
+						<vue-range-slider :tooltip="null" :min="20" :max="100" :step="5" ref="slider"
+							v-model="toolpath_options.shape"></vue-range-slider>
+					</div>
+					<div class="toolpath">
+						<h5>Toolpath</h5>
+						<select name="Toolpath Type" class="form-control" v-model="toolpath_type">
+							<option value="NONE">Nothing</option>
+							<option value="SINE">Sinus</option>
+							<option value="SQUARE">Square</option>
+							<option value="SAW">Saw</option>
+						</select>
+						<p>Magnitude: [[ toolpath_options.magnitude ]]</p>
+						<vue-range-slider :tooltip="null" :min="0" :max="10" :step="0.5" ref="slider"
+							v-model="toolpath_options.magnitude"></vue-range-slider>
+						<p>Wave Lenght: [[ toolpath_options.wave_lenght ]]</p>
+						<vue-range-slider :tooltip="null" :min="+1" :max="+20" :step="+1" ref="slider"
+							v-model="toolpath_options.wave_lenght"></vue-range-slider>
+						<p>Rasterisation: [[ toolpath_options.rasterisation ]]</p>
+						<vue-range-slider :tooltip="null" :min="1" :max="100" :step="1" ref="slider"
+							v-model="toolpath_options.rasterisation"></vue-range-slider>
+					</div>
 				</div>
 			</div>
 		</div>
-	</body>
-	<script src="{{ url_for('static', filename='js/vue_instance.js') }}"></script>
-	<script src="{{ url_for('static', filename='js/index.js') }}"></script>
-	<script src="{{ url_for('static', filename='js/keep_alive.js') }}"></script>
+	</div>
+</body>
+<script src="{{ url_for('static', filename='js/vue_instance.js') }}"></script>
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+<script src="{{ url_for('static', filename='js/keep_alive.js') }}"></script>
+
 </html>
