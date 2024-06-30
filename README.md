@@ -86,7 +86,7 @@ Enter `python3 app.py` in the command line while in the appropriate project fold
 ## Running a Print
 
 1. Click on “New”
-2. Check starting parameters of Shape (read “Set Parameters” below)
+2. Check starting parameters of Shape (read [Changing Parameters](##changing-parameters) below)
 3. Click “Print”
 4. If you want tor pause the print, click “Pause” (the printer should go back to the “Home / Park” automatically, this feature has to be tested if it works)
 5. To resume the print, click on the “Resume” button, where the “Pause” button is located
