@@ -92,9 +92,13 @@ Enter `python3 app.py` in the command line while in the appropriate project fold
 5. To resume the print, click on the “Resume” button, where the “Pause” button is located
 6. To finish the print, click on the “Home / Park” button where the “Print” button is located
 
+![screenshot](https://file.notion.so/f/f/b38fcf95-b521-41e1-8984-1eb2ad2377af/364e3539-60c8-4dcb-beef-5e6f50b9602d/Untitled.png?id=a7795cd6-9268-454f-8433-63fe44ee408b&table=block&spaceId=b38fcf95-b521-41e1-8984-1eb2ad2377af&expirationTimestamp=1719878400000&signature=sYscxQccWzBzpDUT4Ae2MVIGwDBgSD0LbMmXYfip6GU&downloadName=Untitled.png)
+
 ## Changing Parameters
 
 1. It is recommended to lower the “Extrusion Rate” and “Feed rate” at the beginning as vsible in the screenshot (this will also save clay)
 2. The Shape parameters should be self explanatory, changes will be applied with each new layer
 3. “Transformation Factor” is not working yet
+
+![screenshot](https://file.notion.so/f/f/b38fcf95-b521-41e1-8984-1eb2ad2377af/9da10e4f-fcf9-4a14-b0e9-f94ed70dd0bd/Untitled.png?id=c92c8173-6d6c-4bfe-a5f4-b4354efd6ebc&table=block&spaceId=b38fcf95-b521-41e1-8984-1eb2ad2377af&expirationTimestamp=1719878400000&signature=08yvWB3Wg2X9WDvF7vH5vtDibs0_BbGjCIifln7T1Ww&downloadName=Untitled.png)
 
