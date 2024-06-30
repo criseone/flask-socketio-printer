@@ -81,3 +81,20 @@ All the modules are in the requirements.txt file
 
 Enter `python3 app.py` in the command line while in the appropriate project folder and with the virtual environment activated or, open the app.py file with VS Code and go to **Run** > **Run Without Debugging**.
 
+# Usage Instructions
+
+## Running a Print
+
+1. Click on “New”
+2. Check starting parameters of Shape (read “Set Parameters” below)
+3. Click “Print”
+4. If you want tor pause the print, click “Pause” (the printer should go back to the “Home / Park” automatically, this feature has to be tested if it works)
+5. To resume the print, click on the “Resume” button, where the “Pause” button is located
+6. To finish the print, click on the “Home / Park” button where the “Print” button is located
+
+## Changing Parameters
+
+1. It is recommended to lower the “Extrusion Rate” and “Feed rate” at the beginning as vsible in the screenshot (this will also save clay)
+2. The Shape parameters should be self explanatory, changes will be applied with each new layer
+3. “Transformation Factor” is not working yet
+
