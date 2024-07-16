@@ -85,20 +85,21 @@ Enter `python3 app.py` in the command line while in the appropriate project fold
 
 ## Running a Print
 
-1. Click on “New”
-2. Check starting parameters of Shape (read [Changing Parameters](#changing-parameters) below)
-3. Click “Print”
-4. If you want tor pause the print, click “Pause” (the printer should go back to the “Home / Park” automatically, this feature has to be tested if it works)
-5. To resume the print, click on the “Resume” button, where the “Pause” button is located
-6. To finish the print, click on the “Home / Park” button where the “Print” button is located
-
-![screenshot](https://file.notion.so/f/f/b38fcf95-b521-41e1-8984-1eb2ad2377af/364e3539-60c8-4dcb-beef-5e6f50b9602d/Untitled.png?id=a7795cd6-9268-454f-8433-63fe44ee408b&table=block&spaceId=b38fcf95-b521-41e1-8984-1eb2ad2377af&expirationTimestamp=1719878400000&signature=sYscxQccWzBzpDUT4Ae2MVIGwDBgSD0LbMmXYfip6GU&downloadName=Untitled.png)
+1.	The Port Number can be retrieved via Pronterface and added to the text field.
+2.	Press the hand icon to connect to the printer.
+3.	Click on “New”.
+4.	Modify the parameters as desired for the shapes and patterns.
+5.	Click on “Print”.
+6.	Adjust the parameters as described below (Changing Parameters).
+7.	End the printing process via "Home / Park".
 
 ## Changing Parameters
 
-1. It is recommended to lower the “Extrusion Rate” and “Feed rate” at the beginning as vsible in the screenshot (this will also save clay)
-2. The Shape parameters should be self explanatory, changes will be applied with each new layer
-3. “Transformation Factor” is not working yet
-
-![screenshot](https://file.notion.so/f/f/b38fcf95-b521-41e1-8984-1eb2ad2377af/9da10e4f-fcf9-4a14-b0e9-f94ed70dd0bd/Untitled.png?id=c92c8173-6d6c-4bfe-a5f4-b4354efd6ebc&table=block&spaceId=b38fcf95-b521-41e1-8984-1eb2ad2377af&expirationTimestamp=1719878400000&signature=08yvWB3Wg2X9WDvF7vH5vtDibs0_BbGjCIifln7T1Ww&downloadName=Untitled.png)
-
+1.	It is recommended to lower the “Extrusion Rate” and “Feed Rate” at the beginning to ensure that the clay sticks to the board.
+2.	It is also recommended to lower the “Layer Height” at the beginning. After the first 3 layers, increase the “Layer Height” to 1.25.
+3.  Nr. of Lines refers to the number of straight lines per center point.
+4.	The radius is the size of the semicircle at the transition between the straight lines.
+5.	If the line length exceeds 50, there will be overlaps between the individual elements, as the distance between the center points is exactly 50.
+6.	Center points are the number of elements.
+7.	The rotation degree is slowly increased layer by layer until the desired rotation degree is reached.
+8.	“Center”/“Left”/“Right” should be determined at the beginning of the print, as it relates to the growth of the line length. If this element is changed during the print, the entire element will shift.
