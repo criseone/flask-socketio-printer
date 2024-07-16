@@ -64,44 +64,46 @@
 						<vue-range-slider :tooltip="null" :min="+0" :max="+2000" step="+1" ref="slider"
 							v-model="slicer_options.feed_rate"></vue-range-slider>
 						<p>Layer Height: [[ slicer_options.layer_hight ]]</p>
-						<vue-range-slider :tooltip="null" :min="+0.5" :max="+1.8" step="+0.1" ref="slider"
+						<vue-range-slider :tooltip="null" :min="+0.5" :max="+2.5" step="+0.25" ref="slider"
 							v-model="slicer_options.layer_hight"></vue-range-slider>
 					</div>
 					<div class="shape">
-						<h4>Shape</h4>
-						<p>Transformation Factor: [[ toolpath_options.transformation_factor ]]</p>
-						<vue-range-slider :tooltip="null" :min="0" :max="1.5" :step="0.01" ref="slider"
-							v-model="toolpath_options.transformation_factor"></vue-range-slider>
-						<p>Circumnavigations: [[ parseInt(toolpath_options.circumnavigations) ]]</p>
-						<vue-range-slider :tooltip="null" :min="3" :max="10" :step="1" ref="slider"
-							v-model="toolpath_options.circumnavigations"></vue-range-slider>
-						<p>Diameter: [[ parseInt(toolpath_options.diameter) ]]</p>
-						<vue-range-slider :tooltip="null" :min="5" :max="25" :step="5" ref="slider"
+						<h4>Shapes</h4>
+						<p>Nr. of Lines: [[ parseInt(toolpath_options.numlines) ]]</p>
+						<vue-range-slider :tooltip="null" :min="2" :max="6" :step="2" ref="slider"
+							v-model="toolpath_options.numlines"></vue-range-slider>
+						<p>Radius: [[ parseInt(toolpath_options.diameter) ]]</p>
+						<vue-range-slider :tooltip="null" :min="2" :max="8" :step="1" ref="slider"
 							v-model="toolpath_options.diameter"></vue-range-slider>
-						<p>Nr. of Center Points: [[ parseInt(toolpath_options.centerpoints) ]]</p>
-						<vue-range-slider :tooltip="null" :min="2" :max="7" :step="1" ref="slider"
-							v-model="toolpath_options.centerpoints"></vue-range-slider>
-						<p>Shape: [[ parseInt(toolpath_options.shape) ]]</p>
-						<vue-range-slider :tooltip="null" :min="20" :max="100" :step="5" ref="slider"
-							v-model="toolpath_options.shape"></vue-range-slider>
+						<p>Line Length: [[ parseInt(toolpath_options.linelength) ]]</p>
+						<vue-range-slider :tooltip="null" :min="20" :max="60" :step="5" ref="slider"
+							v-model="toolpath_options.linelength"></vue-range-slider>
+						<p>Center Points: [[ parseInt(toolpath_options.center_points) ]]</p>
+						<vue-range-slider :tooltip="null" :min="1" :max="4" :step="1" ref="slider"
+							v-model="toolpath_options.center_points"></vue-range-slider>
+						<p>Rotation Degree: [[ parseInt(toolpath_options.rotation_degree) ]]</p>
+						<vue-range-slider :tooltip="null" :min="-180" :max="180" :step="2" ref="slider"
+							v-model="toolpath_options.rotation_degree"></vue-range-slider>
+						<br>
+						<select name="Grow" class="grow-control form-control" v-model="toolpath_options.grow">
+							<option value="center">Center</option>
+							<option value="left">Left</option>
+							<option value="right">Right</option>
+						</select>
 					</div>
 					<div class="toolpath">
-						<h5>Toolpath</h5>
+						<h4>Pattern</h4>
 						<select name="Toolpath Type" class="form-control" v-model="toolpath_type">
-							<option value="NONE">Nothing</option>
-							<option value="SINE">Sinus</option>
-							<option value="SQUARE">Square</option>
-							<option value="SAW">Saw</option>
+							<option value="straight">Straight</option>
+							<option value="wave">Wave</option>
+							<option value="jagged">Jagged</option>
+							<option value="loop">Loop</option>
+							<option value="rectangle">Rectangle</option>
+							<option value="cross_stitch">Cross Stitch</option>
 						</select>
-						<p>Magnitude: [[ toolpath_options.magnitude ]]</p>
-						<vue-range-slider :tooltip="null" :min="0" :max="10" :step="0.5" ref="slider"
+						<p>Intensity: [[ toolpath_options.magnitude ]]</p>
+						<vue-range-slider :tooltip="null" :min="1" :max="10" :step="0.5" ref="slider"
 							v-model="toolpath_options.magnitude"></vue-range-slider>
-						<p>Wave Lenght: [[ toolpath_options.wave_lenght ]]</p>
-						<vue-range-slider :tooltip="null" :min="+1" :max="+20" :step="+1" ref="slider"
-							v-model="toolpath_options.wave_lenght"></vue-range-slider>
-						<p>Rasterisation: [[ toolpath_options.rasterisation ]]</p>
-						<vue-range-slider :tooltip="null" :min="1" :max="100" :step="1" ref="slider"
-							v-model="toolpath_options.rasterisation"></vue-range-slider>
 					</div>
 				</div>
 			</div>

@@ -23,32 +23,23 @@ class Slicerhandler:
         #    "feed_rate": 850,
         #    "layer_hight": 0.5
         #}
+        
         # delta
         self.params = {
             "extrusion_rate": 0.8,
-            "feed_rate": 1500,
-            "layer_hight": 0.5
+            "feed_rate": 1000,
+            "layer_hight": 1.25
         }
 
     def create(self, height, points):
-        # creates g-code from a list of points and the actuall hight of the print-layer
-
-        # global extrusion_rate
-        # global feed_rate
+        # creates g-code from a list of points and the actual height of the print-layer
 
         gcode = []
 
-        #set layer
-        # global layer_hight
-        #gcode.append("G92 E0")
-        #gcode.append("G1 E-5")
-        #gcode.append("G1 Z" + str(layer * layer_hight))
-
         i = 0
-        #gcode.append("G1 Z10")
+        
         gcode.append("G1 Z" + str(height + self.params['layer_hight']))
         gcode.append("G1 X" + str(points[0][0]) + " Y" + str(points[0][1]))
-        #gcode.append("G1 Z0")
         gcode.append("G92 E0")
         gcode.append("G1 E5 F500")
         while i < len(points) - 1:
@@ -63,7 +54,6 @@ class Slicerhandler:
                 " E" + str(pc.distance(point, point_next) * self.params['extrusion_rate']) + 
                 " F" + str(self.params['feed_rate'])
             )
-            #gcode.append("G1 X" + str(x) + " Y" + str(y) + "F1500")
             i += 1
 
         gcode.append("G92 E0")

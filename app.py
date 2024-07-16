@@ -31,7 +31,8 @@ shape_handler = shapehandler.Shapehandler()
 
 layer = 0
 height = 0
-tooplpath_type = "NONE"
+tooplpath_type = "straight"
+grow =  "center"
 printing = False
 toggle_state = False
 
@@ -58,9 +59,11 @@ def hello():
         'wave_lenght': shape_handler.params_toolpath['wave_lenght'],
         'rasterisation': shape_handler.params_toolpath['rasterisation'],
         'diameter': shape_handler.params_toolpath['diameter'],
-        'circumnavigations': shape_handler.params_toolpath['circumnavigations'],
-        'centerpoints': shape_handler.params_toolpath['centerpoints'],
-        'shape': shape_handler.params_toolpath['shape']
+        'numlines': shape_handler.params_toolpath['numlines'],
+        'center_points': shape_handler.params_toolpath['center_points'],
+        'linelength': shape_handler.params_toolpath['linelength'],
+        'rotation_degree': shape_handler.params_toolpath['rotation_degree'],
+        'grow': shape_handler.params_toolpath['grow'],
     })
 
 @socketio.on('slicer_options')
@@ -71,19 +74,28 @@ def slicer_options(data):
 
 @socketio.on('toolpath_options')
 def toolpath_options(data):
+    global magnitude, diameter, numlines, linelength, rotation_goal, rotation_increment, rotation_degree, center_points, grow
+
     shape_handler.params_toolpath['mag_goal'] = data["magnitude"]
+    magnitude = data["magnitude"]
+
+    rotation_goal = data["rotation_degree"]
+    rotation_increment = data.get("rotation_increment", 2)
+
+    shape_handler.params_toolpath['rotation_goal'] = data["rotation_degree"]
+    rotation_degree = data["rotation_degree"]
+
     shape_handler.params_toolpath['wave_lenght'] = data["wave_lenght"]
     shape_handler.params_toolpath['rasterisation'] = data["rasterisation"]
-    global diameter
+
     shape_handler.params_toolpath['dia_goal'] = data["diameter"]
     diameter = data["diameter"]
-    global circumnavigations
-    circumnavigations = data["circumnavigations"]
-    global centerpoints
-    centerpoints = data["centerpoints"]
-    global shape
-    shape = data["shape"]
-    # print(shape_handler.params_toolpath, data)
+
+    numlines = data["numlines"]
+    linelength = data["linelength"]
+    center_points = data["center_points"]
+    grow = data["grow"]
+    print(shape_handler.params_toolpath, data)
 
 @socketio.on('layer')
 def setLayer(data):
@@ -147,16 +159,13 @@ def printer_pause_resume():
         toggle_state = True  # Set to paused state
         print_handler.pause()
         print("Printing paused.")
+        emit('printer_status', {'status': 'paused'})  # Emit status back to frontend
     else:  # If currently paused (odd count of button clicks)
         printing = True
         toggle_state = False  # Set to printing state
         print_handler.resume()
         print("Printing resumed.")
-
-    # if print_handler.is_printing():
-    #    print_handler.pause()
-    # elif print_handler.is_paused():
-    #    print_handler.resume()
+        emit('printer_status', {'status': 'resumed'})  # Emit status back to frontend
 
 def printer_extrude():
     print_handler.send(["G92 E0", "G1 E2 F100"])
@@ -170,35 +179,40 @@ def zero_layer():
 
 @socketio.on('start_print')
 def start_print(data, wobble):
+    global printing
+    global toggle_state
+
+    if(printing):
+        print("Already printing. Cannot start a new print job.")
+        printing = False
+        return
 
     original_points = []
     for point in data:
         original_points.append(pc.point(point[0], point[1], 0))
-
-    global printing
-    if(printing):
-        printing = False
-        return
     
-    # printing = True
     printing = True
+    toggle_state = False
+
+    emit('printer_status', {'status': 'printing'})
+    print("Print job started.")
 
     shape_handler.params_toolpath['magnitude'] = shape_handler.params_toolpath["mag_goal"]
     shape_handler.params_toolpath['diameter'] = shape_handler.params_toolpath["dia_goal"]
+    shape_handler.params_toolpath['rotation_degree'] = shape_handler.params_toolpath["rotation_goal"]
 
     print_handler.send(slicer_handler.start())
+
     while print_handler.is_printing():
         time.sleep(0.1)
 
     global layer
     global height
     global tooplpath_type
+
     angle = 0
 
-    # next_iteration = layer + 10
-    # while layer < next_iteration:
     while printing:
-        #gcode = slicerhandler.create(i, shapehandler.create_test(0.5 * i))
 
         #Set Machine Height
         if(height > 150):
@@ -206,13 +220,10 @@ def start_print(data, wobble):
 
         wobbler = wobble
         angle = angle + random.randint(-wobbler, wobbler)
-        # print("angle = " + str(angle))
 
         # create the shape points
-        # points = shape_handler.create_test(10)
-        # points = shape_handler.create_stepover(angle, 3)
-        # points = shape_handler.toolpath(original_points, tooplpath_type, angle)
-        points = shape_handler.generate_spiral(circumnavigations, shape, diameter, centerpoints)
+        # points = shape_handler.generate_spiral(circumnavigations, shape, diameter, centerpoints)
+        points = shape_handler.generate_snail_shape(numlines, linelength, diameter, tooplpath_type, center_points, rotation_degree, grow)
 
         repetitions = 1
         for i in range(repetitions):
@@ -223,13 +234,13 @@ def start_print(data, wobble):
             while (print_handler.is_printing() or print_handler.is_paused()):
                 time.sleep(0.1)
                 print(print_handler.status())
-            # update layer hight
+
+            # update layer height
             layer = layer + 1
             height = height + slicer_handler.params['layer_hight']
-            # print("height = " + str(height))
             emit('layer', {'layer': layer}) #"We are on Layer" – Output
 
-            #time.sleep(3)  # Wait 3 seconds
+            time.sleep(3)  # Wait 3 seconds
 
             
         print("height = " + str(height))

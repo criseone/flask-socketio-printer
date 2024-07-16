@@ -32,19 +32,20 @@ const vm = new Vue({ // Again, vm is our Vue instance's name for consistency.
         slicer_options: {
             extrusion_rate: 0,
             feed_rate: 0,
-            layer_hight: 0.5
+            layer_hight: 1.5
         },
         toolpath_options: {
-            transformation_factor: 0,
-            magnitude: 0,
+            magnitude: 5,
             wave_lenght: 0,
             rasterisation: 0,
             diameter: 10,
-            circumnavigations: 1,
-            centerpoints: 3,
-            shape: 100
+            linelength: 50,
+            numlines: 4,
+            center_points: 4,
+            rotation_degree: 0,
+            grow: "center"
         },
-        toolpath_type: "NONE",
+        toolpath_type: "straight",
         plate_center_x: 100,
         plate_center_y: 100
     },
@@ -56,14 +57,12 @@ const vm = new Vue({ // Again, vm is our Vue instance's name for consistency.
         slicer_options: {
             handler: function (newValue, oldValue) {
                 socket.emit('slicer_options', this.slicer_options);
-                // console.log("hello")
             },
             deep: true
         },
         toolpath_options: {
             handler: function (newValue, oldValue) {
                 socket.emit('toolpath_options', this.toolpath_options);
-                // console.log("hello")
             },
             deep: true
         },
@@ -93,13 +92,6 @@ const vm = new Vue({ // Again, vm is our Vue instance's name for consistency.
         svgFactor: function () {
             return 150 / this.windowWidth;
         },
-        // printLable: function() {
-        //     if (this.isPrinting) {
-        //         return "Stop"
-        //     } else {
-        //         return "Print"
-        //     }
-        // }
     },
     methods: {
         poll () {
@@ -196,11 +188,14 @@ const vm = new Vue({ // Again, vm is our Vue instance's name for consistency.
             }
         },
         pause: function(event) {
+            console.log("Pause button clicked. Current label: " + this.pauseLable);
             socket.emit('printer_pause_resume');
             if (this.pauseLable == "Pause") {
-                this.pauseLable = "Resume"
+                this.pauseLable = "Resume";
+                console.log("Printer paused");
             } else {
-                this.pauseLable = "Pause"
+                this.pauseLable = "Pause";
+                console.log("Printer resumed");
             }
         },
         // functionality for the drawing thingy

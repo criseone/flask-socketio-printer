@@ -16,6 +16,7 @@ h2{
     justify-content: space-between;
     align-content: space-between;
     padding: 10px;
+    z-index: 100;
 }
 
 #header h1 {
@@ -26,7 +27,6 @@ h2{
 }
 
 #header .icon {
-    /* float: right; */
     cursor: pointer;
     animation-name: wave-animation;  /* Refers to the name of your @keyframes element below */
     animation-duration: 2.5s;        /* Change to speed up or slow down */
@@ -92,7 +92,6 @@ p {
     background-color: #68f503;
     padding: 160px 10px 10px 10px;
     width: 100%;
-
 }
 
 #sidebar::-webkit-scrollbar {
@@ -124,16 +123,16 @@ button {
     font-size: 16px;
 }
 
-.toolpath{
+/*.toolpath{
     display: none;
-}
+}*/
 
 .vue-range-slider.slider-component{
     padding: 0 !important;
 }
 
-.shape{
+.shape, .toolpath{
     margin-top: 1rem;
-    padding-top: 0.5rem;
+    padding: 0.5rem 0;
     border-top: 1px dotted black;
 }
